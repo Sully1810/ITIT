@@ -2,6 +2,9 @@
 # I probably won't use this but I want it just in case
 import sys
 
+# Need to be able to use SQL commands in the background
+import sqlite3
+
 # Now we are going to get stuff from PyQT6
 # Have to tell it what we want because they offer a lot of stuff
 from PyQt6.QtCore import Qt, QSize
@@ -28,6 +31,14 @@ class MainWindow(QMainWindow):
 
         # Giving my app a title window. 
         self.setWindowTitle("ITIT")
+
+        # Called to create the inventory DB
+        # Only used on first time
+        #self.createDatabase()
+
+        # Called to create the tables for the DB
+        # Only used on first time
+        #self.createTables()
 
         label = QLabel("Hello!")
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -96,7 +107,28 @@ class MainWindow(QMainWindow):
         print("Sam needs to insert update code.")
 
     def clickedOnDeleteIcon(self):
-        print("Sam needs to insert delete code.")      
+        print("Sam needs to insert delete code.")
+
+    def createDatabase(self):
+        # Connecting with the database to work with the information stored there
+        con = sqlite3.connect('inventory.db')
+        # Creating the cursor method to use the execute method
+        cur = con.cursor()
+
+    def createTables(self):
+
+        # Connecting with the database to work with the information stored there
+        con = sqlite3.connect('inventory.db')
+        # Creating the cursor method to use the execute method
+        cur = con.cursor()
+
+        # Creating my first table using the execute method
+        # Then the rows are listed as well
+        # First column is primary key by making it an INTEGER NOT NULL PRIMARY KEY
+        cur.execute(''' CREATE TABLE computer
+                    (number INTEGER NOT NULL PRIMARY KEY, make, model, purchasedDate, name, assignedBranch)''')
+    
+        
 
 # Creating the application
 # Passing in sys.argv to allow command line arguements
