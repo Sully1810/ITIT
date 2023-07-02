@@ -8,7 +8,7 @@ import sqlite3
 # Now we are going to get stuff from PyQT6
 # Have to tell it what we want because they offer a lot of stuff
 from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QMainWindow, QPushButton, QStackedLayout, QVBoxLayout, QWidget, QToolBar, QStatusBar
+from PyQt6.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QWidget, QToolBar, QStatusBar, QLineEdit, QGridLayout
 from PyQt6.QtGui import QPalette, QColor, QAction, QIcon, QPixmap
 
 # Creating the color class to customize our interface layout
@@ -89,7 +89,7 @@ class MainWindow(QMainWindow):
         self.setStatusBar(QStatusBar(self))
 
     def clickedOnHomeIcon(self):
-  
+        # Inserting an image of what I want my text to look like. 
         textImage = QPixmap('homeScreenText.jpg')
         textImageLabel = QLabel()
         textImageLabel.setPixmap(textImage)
@@ -101,7 +101,158 @@ class MainWindow(QMainWindow):
         print("Sam needs to insert search code.")
 
     def clickedOnPlusIcon(self):
-        print("Sam needs to insert add code.")
+
+        plusLayout = QGridLayout()
+        
+        # Getting input from the user about the items that need added to the inventory
+        # Got a bit crazy
+        
+        # Getting primary key information
+        self.getPrimaryKey = QLineEdit()
+        # Setting a mak length for the primary key
+        self.getPrimaryKey.setMaxLength(5)
+        # Tells user what to put in box. 
+        self.getPrimaryKey.setPlaceholderText("Enter item number: ")
+        # Add it to the grid to show up on screen
+        plusLayout.addWidget(self.getPrimaryKey, 0, 0)
+        # What to do once enter has been submitted
+        self.getPrimaryKey.returnPressed.connect(self.pkReturnPressed)
+
+        # Creating a line to show when the user has pressed enter to submit the information
+        # For primary key
+        self.pkReady = QLineEdit(text="Not Ready")
+        # Add it to the layout
+        plusLayout.addWidget(self.pkReady, 0, 1)
+
+        # Follows same logic as the primary key information
+        self.getMake = QLineEdit()
+        self.getMake.setMaxLength(20)
+        self.getMake.setPlaceholderText("Enter item make: ")
+        plusLayout.addWidget(self.getMake, 1, 0)
+        self.getMake.returnPressed.connect(self.maReturnPressed)
+
+        # Follows same logic as pkReady line
+        # For make 
+        self.maReady = QLineEdit(text="Not Ready")
+        plusLayout.addWidget(self.maReady, 1, 1)
+
+        # Follows same logic as the primary key information
+        self.getModel = QLineEdit()
+        self.getModel.setMaxLength(20)
+        self.getModel.setPlaceholderText("Enter item model: ")
+        plusLayout.addWidget(self.getModel, 2, 0)
+        self.getModel.returnPressed.connect(self.moReturnPressed)
+
+        # Follows same logic as pkReady line
+        # For model
+        self.moReady = QLineEdit(text="Not Ready")
+        plusLayout.addWidget(self.moReady, 2, 1)        
+
+        # Follows same logic as the primary key information
+        self.getItemType = QLineEdit()
+        self.getItemType.setMaxLength(50)
+        self.getItemType.setPlaceholderText("Enter item type: ")
+        plusLayout.addWidget(self.getItemType, 3, 0)
+        self.getItemType.returnPressed.connect(self.itReturnPressed)
+
+        # Follows same logic as pkReady line
+        # For item type
+        self.itReady = QLineEdit(text="Not Ready")
+        plusLayout.addWidget(self.itReady, 3, 1)
+
+        # Follows same logic as the primary key information
+        self.getPurchasedDate = QLineEdit()
+        self.getPurchasedDate.setMaxLength(10)
+        self.getPurchasedDate.setPlaceholderText("Enter item purchased date: ")
+        plusLayout.addWidget(self.getPurchasedDate, 4, 0)
+        self.getPurchasedDate.returnPressed.connect(self.pdReturnPressed)
+
+        # Follows same logic as pkReady line
+        # For purchased date
+        self.pdReady = QLineEdit(text="Not Ready")
+        plusLayout.addWidget(self.pdReady, 4, 1)
+
+        # Follows same logic as the primary key information
+        self.getName = QLineEdit()
+        self.getName.setMaxLength(5) 
+        self.getName.setPlaceholderText("Enter item name: ")
+        plusLayout.addWidget(self.getName, 5, 0)
+        self.getName.returnPressed.connect(self.naReturnPressed)
+
+        # Follows same logic as pkReady line
+        # For name
+        self.naReady = QLineEdit(text="Not Ready")
+        plusLayout.addWidget(self.naReady, 5, 1)
+
+        # Follows same logic as the primary key information
+        self.getAssignedBranch = QLineEdit()
+        self.getAssignedBranch.setMaxLength(20)
+        self.getAssignedBranch.setPlaceholderText("Enter item branch: ")
+        plusLayout.addWidget(self.getAssignedBranch, 6, 0)
+        self.getAssignedBranch.returnPressed.connect(self.abReturnPressed)
+
+        # Follows same logic as pkReady line
+        # For assigned branch 
+        self.abReady = QLineEdit(text="Not Ready")
+        plusLayout.addWidget(self.abReady, 6, 1)
+
+        # Created a submit button
+        self.addSubmitBtn = QPushButton(text="Submit")
+        # Add it to the grid
+        plusLayout.addWidget(self.addSubmitBtn, 3, 2)
+        # Tells what happens when the button is clicked on
+        self.addSubmitBtn.clicked.connect(self.sBtnClicked)
+
+        widget = QWidget()
+        widget.setLayout(plusLayout)
+        self.setCentralWidget(widget)
+
+    def pkReturnPressed(self):
+        self.pkReady.setText("Ready!")
+        self.primaryKey = self.getPrimaryKey.text()
+        return self.primaryKey
+
+    def maReturnPressed(self):
+        self.maReady.setText("Ready!")
+        self.make = self.getMake.text()
+        return self.make
+        
+    def moReturnPressed(self):
+        self.moReady.setText("Ready!")
+        self.model = self.getModel.text()
+        return self.model
+
+    def itReturnPressed(self):
+        self.itReady.setText("Ready!")
+        self.itemType = self.getItemType.text()
+        return self.itemType
+
+    def pdReturnPressed(self):
+        self.pdReady.setText("Ready!")
+        self.purchasedDate = self.getPurchasedDate.text()
+        return self.purchasedDate
+
+    def naReturnPressed(self):
+        self.naReady.setText("Ready!")
+        self.name = self.getName.text()
+        return self.name
+
+    def abReturnPressed(self):
+        self.abReady.setText("Ready!")
+        self.assignedBranch = self.getAssignedBranch.text()
+        return self.assignedBranch
+
+    def sBtnClicked(self):
+        self.addCommand()
+        self.addSubmitBtn.setText("Completed!")
+
+    def addCommand(self):
+        # Connecting with the database to work with the information stored there
+        con = sqlite3.connect('inventory.db')
+        # Creating the cursor method to use the execute method
+        cur = con.cursor()
+
+        cur.execute("INSERT INTO computer VALUES (?, ?, ?, ?, ?, ?, ?)", (self.primaryKey, self.make, self.model, self.itemType, self.purchasedDate, self.name, self.assignedBranch))
 
     def clickedOnUpdateIcon(self):
         print("Sam needs to insert update code.")
@@ -126,10 +277,8 @@ class MainWindow(QMainWindow):
         # Then the rows are listed as well
         # First column is primary key by making it an INTEGER NOT NULL PRIMARY KEY
         cur.execute(''' CREATE TABLE computer
-                    (number INTEGER NOT NULL PRIMARY KEY, make, model, purchasedDate, name, assignedBranch)''')
-    
+                    (number INTEGER NOT NULL PRIMARY KEY, make, model, itemType, purchasedDate, name, assignedBranch)''')
         
-
 # Creating the application
 # Passing in sys.argv to allow command line arguements
 # Applications handle our event loop
