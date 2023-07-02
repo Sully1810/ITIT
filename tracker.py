@@ -4,9 +4,9 @@ import sys
 
 # Now we are going to get stuff from PyQT6
 # Have to tell it what we want because they offer a lot of stuff
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QMainWindow, QPushButton, QStackedLayout, QVBoxLayout, QWidget
-from PyQt6.QtGui import QPalette, QColor, QAction, QIcon
+from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QMainWindow, QPushButton, QStackedLayout, QVBoxLayout, QWidget, QToolBar, QStatusBar
+from PyQt6.QtGui import QPalette, QColor, QAction, QIcon, QPixmap
 
 # Creating the color class to customize our interface layout
 class Color(QWidget):
@@ -29,82 +29,31 @@ class MainWindow(QMainWindow):
         # Giving my app a title window. 
         self.setWindowTitle("ITIT")
 
-        # Setting up the interface layout using to several different types
-        # Page layout will work vertically
-        pagelayout = QVBoxLayout()
-        # The buttons need to be laid out horizontally
-        button_layout = QHBoxLayout()
-        # I need the pages to be stacked according to what button is pushed
-        # The stacklayout allows that
-        self.stacklayout = QStackedLayout()
+        label = QLabel("Hello!")
+        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # Have to pass my button_layout and my self.stacklayout through our page layout to help it align
-        pagelayout.addLayout(button_layout)
-        pagelayout.addLayout(self.stacklayout)
+        self.setCentralWidget(label)
 
-        # Creating my Home Button
-        btn = QPushButton("Home")
-        # Telling the program what needs to happen when the button is pushed
-        # In this case, it needs to activate_tab_1 which will hold everything on the home page
-        btn.pressed.connect(self.activate_tab_1)
-        # Adding the button to our layout
-        button_layout.addWidget(btn)
-        # Making it red so you can see the changes from switching screens
-        self.stacklayout.addWidget(Color("red"))
+        toolbar = QToolBar("My main toolbar")
+        toolbar.setIconSize(QSize(16,16))
+        self.addToolBar(toolbar)
 
-        # Followed the "Home" button logic
-        # Creating my Search Inventory Button
-        btn = QPushButton("Search Inventory")
-        btn.pressed.connect(self.activate_tab_2)
-        button_layout.addWidget(btn)
-        self.stacklayout.addWidget(Color("green"))
+        homeIcon = QAction(QIcon("home.png"), "Home", self)
+        homeIcon.setStatusTip("Click to return to home screen.")
+        homeIcon.triggered.connect(self.clickedOnHomeIcon)
+        homeIcon.setCheckable(True)
+        toolbar.addAction(homeIcon)
 
-        # Followed the "Home" button logic
-        # Creating my Add Items Button        
-        btn = QPushButton("Add Items")
-        btn.pressed.connect(self.activate_tab_3)
-        button_layout.addWidget(btn)
-        self.stacklayout.addWidget(Color("yellow"))
+        self.setStatusBar(QStatusBar(self))
 
-        # Followed the "Home" button logic
-        # Creating my Update Items Button
-        btn = QPushButton("Update Items")
-        btn.pressed.connect(self.activate_tab_4)
-        button_layout.addWidget(btn)
-        self.stacklayout.addWidget(Color("blue"))
+    def clickedOnHomeIcon(self):
+  
+        textImage = QPixmap('homeScreenText.jpg')
+        textImageLabel = QLabel()
+        textImageLabel.setPixmap(textImage)
+        textImageLabel.setScaledContents(True)
 
-        # Followed the "Home" button logic
-        # Creating my Delete Items Button
-        btn = QPushButton("Delete Items")
-        btn.pressed.connect(self.activate_tab_5)
-        button_layout.addWidget(btn)
-        self.stacklayout.addWidget(Color("purple"))
-
-        # Creates blank widgets that our buttons go into
-        # Allows the "stacking" to happen
-        widget = QWidget()
-        widget.setLayout(pagelayout)
-        self.setCentralWidget(widget)
-
-    # Defines what to do if home button is pushed
-    def activate_tab_1(self):
-        self.stacklayout.setCurrentIndex(0)
-
-    # Defines what to do if search inventory button is pushed
-    def activate_tab_2(self):
-        self.stacklayout.setCurrentIndex(1)
-
-    # Defines what to do if add items button is pushed
-    def activate_tab_3(self):
-        self.stacklayout.setCurrentIndex(2)
-
-    # Defines what to do if update items button is pushed
-    def activate_tab_4(self):
-        self.stacklayout.setCurrentIndex(3)
-
-    # Defines what to do if delete button is pushed
-    def activate_tab_5(self):
-        self.stacklayout.setCurrentIndex(4)
+        self.setCentralWidget(textImageLabel)
 
 # Creating the application
 # Passing in sys.argv to allow command line arguements
