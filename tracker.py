@@ -38,11 +38,42 @@ class MainWindow(QMainWindow):
         toolbar.setIconSize(QSize(16,16))
         self.addToolBar(toolbar)
 
+        # Creating my home icon
         homeIcon = QAction(QIcon("home.png"), "Home", self)
+        # Tells people what to do if they hover over it
         homeIcon.setStatusTip("Click to return to home screen.")
+        # Tells what happens if someone presses the home icon
         homeIcon.triggered.connect(self.clickedOnHomeIcon)
-        homeIcon.setCheckable(True)
+        # Adds the icon to the toolbar
         toolbar.addAction(homeIcon)
+
+        # Follows the same logic as the home icon
+        # Creating the search icon
+        searchIcon = QAction(QIcon("search.png"), "Search", self)
+        searchIcon.setStatusTip("Click to search inventory list.")
+        searchIcon.triggered.connect(self.clickedOnSearchIcon)
+        toolbar.addAction(searchIcon)
+
+        # Follows the same logic as the home icon
+        # Creating the add items icon
+        plusIcon = QAction(QIcon("plus.png"), "Add Items", self)
+        plusIcon.setStatusTip("Click to add items to the inventory list.")
+        plusIcon.triggered.connect(self.clickedOnPlusIcon)
+        toolbar.addAction(plusIcon)
+
+        # Follows the same logic as the home icon
+        # Creating the update items icon
+        updateIcon = QAction(QIcon("upArrow.png"), "Update Items", self)
+        updateIcon.setStatusTip("Click to update an item's information.")
+        updateIcon.triggered.connect(self.clickedOnUpdateIcon)
+        toolbar.addAction(updateIcon)
+
+        # Follows the same logic as the home icon
+        # Creating the delete icon
+        deleteIcon = QAction(QIcon("delete.png"), "Delete Items", self)
+        deleteIcon.setStatusTip("Click to delete items from the inventory list.")
+        deleteIcon.triggered.connect(self.clickedOnDeleteIcon)
+        toolbar.addAction(deleteIcon)
 
         self.setStatusBar(QStatusBar(self))
 
@@ -54,6 +85,18 @@ class MainWindow(QMainWindow):
         textImageLabel.setScaledContents(True)
 
         self.setCentralWidget(textImageLabel)
+
+    def clickedOnSearchIcon(self):
+        print("Sam needs to insert search code.")
+
+    def clickedOnPlusIcon(self):
+        print("Sam needs to insert add code.")
+
+    def clickedOnUpdateIcon(self):
+        print("Sam needs to insert update code.")
+
+    def clickedOnDeleteIcon(self):
+        print("Sam needs to insert delete code.")      
 
 # Creating the application
 # Passing in sys.argv to allow command line arguements
