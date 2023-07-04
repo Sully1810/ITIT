@@ -126,7 +126,7 @@ class MainWindow(QMainWindow):
         searchLayout.addWidget(self.forSearchBtn)        
 
         # Add an "empty" box of text to display the results
-        self.resultOfSearch = QLineEdit()
+        self.resultOfSearch = QLineEdit(self)
         # Add it to the layout
         searchLayout.addWidget(self.resultOfSearch)
 
@@ -152,8 +152,9 @@ class MainWindow(QMainWindow):
 
     # SQL command for searching through the database
     def searchForItem(self):
-        if self.nameForSearch == self.cur.execute("SELECT ? FROM computer ORDER BY name", ([self.nameForSearch])):
-            self.resultOfSearch.setPlaceholderText("Computer exists.")
+        for row in self.cur.execute("SELECT ? FROM computer ORDER BY name", ([self.nameForSearch])):
+            self.resultOfSearch.setText(str(row))
+            return self.resultOfSearch
 
     def clickedOnPlusIcon(self):
 
