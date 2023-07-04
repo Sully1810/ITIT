@@ -152,9 +152,10 @@ class MainWindow(QMainWindow):
 
     # SQL command for searching through the database
     def searchForItem(self):
-        for row in self.cur.execute("SELECT ? FROM computer ORDER BY name", ([self.nameForSearch])):
+        for row in self.cur.execute("SELECT ? FROM computer", ([self.nameForSearch])):
             self.resultOfSearch.setText(str(row))
             return self.resultOfSearch
+        self.con.commit()
 
     def clickedOnPlusIcon(self):
 
@@ -304,6 +305,9 @@ class MainWindow(QMainWindow):
 
     def addCommand(self):
         self.cur.execute("INSERT INTO computer VALUES (?, ?, ?, ?, ?, ?, ?)", (self.primaryKey, self.make, self.model, self.itemType, self.purchasedDate, self.name, self.assignedBranch))
+
+        # To save what people put into the table
+        self.con.commit()
 
     def clickedOnUpdateIcon(self):
         print("Sam needs to insert update code.")
