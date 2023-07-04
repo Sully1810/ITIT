@@ -417,7 +417,7 @@ class MainWindow(QMainWindow):
         widget.setLayout(updateLayout)
         self.setCentralWidget(widget)
 
-    # What happens when the update button is changed. 
+    # What happens when the update button is returned
     def updateBtnClicked(self):
         self.updateCommand()
         self.updateSubmitBtn.setText("Completed!")
