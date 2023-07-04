@@ -8,7 +8,7 @@ import sqlite3
 # Now we are going to get stuff from PyQT6
 # Have to tell it what we want because they offer a lot of stuff
 from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QWidget, QToolBar, QStatusBar, QLineEdit, QGridLayout
+from PyQt6.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QWidget, QToolBar, QStatusBar, QLineEdit, QGridLayout, QVBoxLayout
 from PyQt6.QtGui import QPalette, QColor, QAction, QIcon, QPixmap
 
 # Creating the color class to customize our interface layout
@@ -31,14 +31,6 @@ class MainWindow(QMainWindow):
 
         # Giving my app a title window. 
         self.setWindowTitle("ITIT")
-
-        # Called to create the inventory DB
-        # Only used on first time
-        #self.createDatabase()
-
-        # Called to create the tables for the DB
-        # Only used on first time
-        #self.createTables()
 
         label = QLabel("Hello!")
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -88,6 +80,17 @@ class MainWindow(QMainWindow):
 
         self.setStatusBar(QStatusBar(self))
 
+        # Adding in what I will need to make the SQL stuff work
+        # Create the connection to our database
+        self.con = sqlite3.connect('inventory.db')
+        # Need the cursor object to be able to use our execute method
+        # Execute method is what allows us to use SQL commands
+        self.cur = self.con.cursor()
+
+        # Called to create the tables for the DB
+        # Only used on first time
+        #self.createTables()
+
     def clickedOnHomeIcon(self):
         # Inserting an image of what I want my text to look like. 
         textImage = QPixmap('homeScreenText.jpg')
@@ -98,7 +101,59 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(textImageLabel)
 
     def clickedOnSearchIcon(self):
-        print("Sam needs to insert search code.")
+
+        # Begin my layout for the Search page
+        searchLayout = QVBoxLayout()
+
+        # Get input from the user for the computer that they need to search for  
+        self.getNameToSearchFor = QLineEdit()
+        # Setting a max length for the computer name (always 5)
+        self.getNameToSearchFor.setMaxLength(5)
+        # Tell user what we want in the box
+        self.getNameToSearchFor.setPlaceholderText("Enter computer name: ")
+        # Add to the layout
+        searchLayout.addWidget(self.getNameToSearchFor)
+        # Now state what happens when return is pressed
+        self.getNameToSearchFor.returnPressed.connect(self.sfReturnPressed)
+
+        # Creating a submit button to run search command
+        self.forSearchBtn = QPushButton()
+        # Set button text
+        self.forSearchBtn.setText("Not Ready to Submit")
+        # What happens when button is pressed
+        self.forSearchBtn.clicked.connect(self.fsbClicked)
+        # Add it to the layout
+        searchLayout.addWidget(self.forSearchBtn)        
+
+        # Add an "empty" box of text to display the results
+        self.resultOfSearch = QLineEdit()
+        # Add it to the layout
+        searchLayout.addWidget(self.resultOfSearch)
+
+        # Create a blank widget
+        widget = QWidget()
+        # Place our layout in the blank widget so that all the widgets found within are shown
+        widget.setLayout(searchLayout)
+        # Make the widget the central widget so it is show on the screen
+        self.setCentralWidget(widget)
+    
+    # Stating what happens once enter gets pressed for name to search for
+    def sfReturnPressed(self):
+        self.forSearchBtn.setText("Ready To Submit!")
+        self.nameForSearch = self.getNameToSearchFor.text()
+        return self.nameForSearch
+    
+    # What happens when for search button is pressed
+    def fsbClicked(self):
+        # Change the text so they know something happened
+        self.forSearchBtn.setText("Submitted!")
+        # Call the SQL to look for the item
+        self.searchForItem()
+
+    # SQL command for searching through the database
+    def searchForItem(self):
+        if self.nameForSearch == self.cur.execute("SELECT ? FROM computer ORDER BY name", ([self.nameForSearch])):
+            self.resultOfSearch.setPlaceholderText("Computer exists.")
 
     def clickedOnPlusIcon(self):
 
@@ -247,12 +302,7 @@ class MainWindow(QMainWindow):
         self.addSubmitBtn.setText("Completed!")
 
     def addCommand(self):
-        # Connecting with the database to work with the information stored there
-        con = sqlite3.connect('inventory.db')
-        # Creating the cursor method to use the execute method
-        cur = con.cursor()
-
-        cur.execute("INSERT INTO computer VALUES (?, ?, ?, ?, ?, ?, ?)", (self.primaryKey, self.make, self.model, self.itemType, self.purchasedDate, self.name, self.assignedBranch))
+        self.cur.execute("INSERT INTO computer VALUES (?, ?, ?, ?, ?, ?, ?)", (self.primaryKey, self.make, self.model, self.itemType, self.purchasedDate, self.name, self.assignedBranch))
 
     def clickedOnUpdateIcon(self):
         print("Sam needs to insert update code.")
@@ -260,23 +310,11 @@ class MainWindow(QMainWindow):
     def clickedOnDeleteIcon(self):
         print("Sam needs to insert delete code.")
 
-    def createDatabase(self):
-        # Connecting with the database to work with the information stored there
-        con = sqlite3.connect('inventory.db')
-        # Creating the cursor method to use the execute method
-        cur = con.cursor()
-
     def createTables(self):
-
-        # Connecting with the database to work with the information stored there
-        con = sqlite3.connect('inventory.db')
-        # Creating the cursor method to use the execute method
-        cur = con.cursor()
-
         # Creating my first table using the execute method
         # Then the rows are listed as well
         # First column is primary key by making it an INTEGER NOT NULL PRIMARY KEY
-        cur.execute(''' CREATE TABLE computer
+        self.cur.execute(''' CREATE TABLE computer
                     (number INTEGER NOT NULL PRIMARY KEY, make, model, itemType, purchasedDate, name, assignedBranch)''')
         
 # Creating the application
