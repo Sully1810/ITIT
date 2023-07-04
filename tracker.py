@@ -310,8 +310,126 @@ class MainWindow(QMainWindow):
         self.con.commit()
 
     def clickedOnUpdateIcon(self):
-        print("Sam needs to insert update code.")
+        
+        # Creating submit page layout
+        updateLayout = QGridLayout()
+        
+        # Getting input from the user about the item that needs updated in the inventory
+        # There is a lot to write. 
+        # Getting primary key information
+        self.getPrimaryKey = QLineEdit()
+        # Setting a mak length for the primary key
+        self.getPrimaryKey.setMaxLength(5)
+        # Tells user what to put in box. 
+        self.getPrimaryKey.setPlaceholderText("Enter item number: ")
+        # Add it to the grid to show up on screen
+        updateLayout.addWidget(self.getPrimaryKey, 0, 0)
+        # What to do once enter has been submitted
+        self.getPrimaryKey.returnPressed.connect(self.pkReturnPressed)
 
+        # Creating a line to show when the user has pressed enter to submit the information
+        # For primary key
+        self.pkReady = QLineEdit(text="Not Ready")
+        # Add it to the layout
+        updateLayout.addWidget(self.pkReady, 0, 1)
+
+        # Follows same logic as the primary key information
+        self.getMake = QLineEdit()
+        self.getMake.setMaxLength(20)
+        self.getMake.setPlaceholderText("Enter item make: ")
+        updateLayout.addWidget(self.getMake, 1, 0)
+        self.getMake.returnPressed.connect(self.maReturnPressed)
+
+        # Follows same logic as pkReady line
+        # For make 
+        self.maReady = QLineEdit(text="Not Ready")
+        updateLayout.addWidget(self.maReady, 1, 1)
+
+        # Follows same logic as the primary key information
+        self.getModel = QLineEdit()
+        self.getModel.setMaxLength(20)
+        self.getModel.setPlaceholderText("Enter item model: ")
+        updateLayout.addWidget(self.getModel, 2, 0)
+        self.getModel.returnPressed.connect(self.moReturnPressed)
+
+        # Follows same logic as pkReady line
+        # For model
+        self.moReady = QLineEdit(text="Not Ready")
+        updateLayout.addWidget(self.moReady, 2, 1)        
+
+        # Follows same logic as the primary key information
+        self.getItemType = QLineEdit()
+        self.getItemType.setMaxLength(50)
+        self.getItemType.setPlaceholderText("Enter item type: ")
+        updateLayout.addWidget(self.getItemType, 3, 0)
+        self.getItemType.returnPressed.connect(self.itReturnPressed)
+
+        # Follows same logic as pkReady line
+        # For item type
+        self.itReady = QLineEdit(text="Not Ready")
+        updateLayout.addWidget(self.itReady, 3, 1)
+
+        # Follows same logic as the primary key information
+        self.getPurchasedDate = QLineEdit()
+        self.getPurchasedDate.setMaxLength(10)
+        self.getPurchasedDate.setPlaceholderText("Enter item purchased date: ")
+        updateLayout.addWidget(self.getPurchasedDate, 4, 0)
+        self.getPurchasedDate.returnPressed.connect(self.pdReturnPressed)
+
+        # Follows same logic as pkReady line
+        # For purchased date
+        self.pdReady = QLineEdit(text="Not Ready")
+        updateLayout.addWidget(self.pdReady, 4, 1)
+
+        # Follows same logic as the primary key information
+        self.getName = QLineEdit()
+        self.getName.setMaxLength(5) 
+        self.getName.setPlaceholderText("Enter item name: ")
+        updateLayout.addWidget(self.getName, 5, 0)
+        self.getName.returnPressed.connect(self.naReturnPressed)
+
+        # Follows same logic as pkReady line
+        # For name
+        self.naReady = QLineEdit(text="Not Ready")
+        updateLayout.addWidget(self.naReady, 5, 1)
+
+        # Follows same logic as the primary key information
+        self.getAssignedBranch = QLineEdit()
+        self.getAssignedBranch.setMaxLength(20)
+        self.getAssignedBranch.setPlaceholderText("Enter item branch: ")
+        updateLayout.addWidget(self.getAssignedBranch, 6, 0)
+        self.getAssignedBranch.returnPressed.connect(self.abReturnPressed)
+
+        # Follows same logic as pkReady line
+        # For assigned branch 
+        self.abReady = QLineEdit(text="Not Ready")
+        updateLayout.addWidget(self.abReady, 6, 1)
+
+        # Created a submit button
+        self.updateSubmitBtn = QPushButton(text="Submit")
+        # Add it to the grid
+        updateLayout.addWidget(self.updateSubmitBtn, 3, 2)
+        # Tells what happens when the button is clicked on
+        self.updateSubmitBtn.clicked.connect(self.updateBtnClicked)
+
+        # Gets the widget to show on the page
+        widget = QWidget()
+        widget.setLayout(updateLayout)
+        self.setCentralWidget(widget)
+
+    # What happens when the update button is changed. 
+    def updateBtnClicked(self):
+        self.updateCommand()
+        self.updateSubmitBtn.setText("Completed!")
+
+    # SQL command for updating items. 
+    def updateCommand(self):
+        self.cur.execute("UPDATE computer SET make=?, model=?, itemType=?, purchasedDate=?, name=?, assignedBranch=? WHERE number =?", 
+                        (self.make, self.model, self.itemType, self.purchasedDate, self.name, self.assignedBranch, self.primaryKey))
+
+        # To save what people put into the table
+        self.con.commit()        
+        
     def clickedOnDeleteIcon(self):
         print("Sam needs to insert delete code.")
 
