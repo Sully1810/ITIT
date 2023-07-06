@@ -431,7 +431,55 @@ class MainWindow(QMainWindow):
         self.con.commit()        
         
     def clickedOnDeleteIcon(self):
-        print("Sam needs to insert delete code.")
+        
+        # Creating the delete page layout
+        deleteLayout = QVBoxLayout()
+
+        # Creating a variable to get the name of the item that needs deleted
+        self.nameToDelete = QLineEdit()
+        # Setting the limit of how many characters names can be
+        self.nameToDelete.setMaxLength(5)
+        # Tells what needs to be in the box
+        self.nameToDelete.setPlaceholderText("Enter computer name: ")
+        # Add to the layout
+        deleteLayout.addWidget(self.nameToDelete)
+        # Now state what happens when return is pressed
+        self.nameToDelete.returnPressed.connect(self.ntdReturnPressed)
+
+        # Creating a delete button to run delete command
+        self.deleteBtn = QPushButton()
+        # Set button text
+        self.deleteBtn.setText("Not Ready to Submit")
+        # What happens when button is pressed
+        self.deleteBtn.clicked.connect(self.dBtnClicked)
+        # Add it to the layout
+        deleteLayout.addWidget(self.deleteBtn)        
+
+        # Create a blank widget
+        widget = QWidget()
+        # Place our layout in the blank widget so that all the widgets found within are shown
+        widget.setLayout(deleteLayout)
+        # Make the widget the central widget so it is show on the screen
+        self.setCentralWidget(widget)      
+
+    # What happens when the name in delete is entered
+    def ntdReturnPressed(self):
+        self.deleteBtn.setText("Ready To Submit!")
+        self.nameToDelete = self.nameToDelete.text()
+
+    def dBtnClicked(self):
+        # Change the text so they know something happened
+        self.deleteBtn.setText("Deleted!")
+        # Call the SQL to delete the item
+        self.deleteItem()    
+
+    # SQL command for deleting the item
+    def deleteItem(self):
+        # Call the cursor to use our execute function
+        self.cur.execute("DELETE FROM computer WHERE name=?", ([self.nameToDelete]))
+
+        # Commit our changes!!!
+        self.con.commit()
 
     def createTables(self):
         # Creating my first table using the execute method
