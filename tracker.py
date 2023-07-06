@@ -8,7 +8,7 @@ import sqlite3
 # Now we are going to get stuff from PyQT6
 # Have to tell it what we want because they offer a lot of stuff
 from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QWidget, QToolBar, QStatusBar, QLineEdit, QGridLayout, QVBoxLayout
+from PyQt6.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QWidget, QToolBar, QStatusBar, QLineEdit, QGridLayout, QVBoxLayout, QTextEdit
 from PyQt6.QtGui import QPalette, QColor, QAction, QIcon, QPixmap
 
 # Creating the color class to customize our interface layout
@@ -126,7 +126,7 @@ class MainWindow(QMainWindow):
         searchLayout.addWidget(self.forSearchBtn)        
 
         # Add an "empty" box of text to display the results
-        self.resultOfSearch = QLineEdit(self)
+        self.resultOfSearch = QLabel()
         # Add it to the layout
         searchLayout.addWidget(self.resultOfSearch)
 
@@ -152,9 +152,18 @@ class MainWindow(QMainWindow):
 
     # SQL command for searching through the database
     def searchForItem(self):
-        for row in self.cur.execute("SELECT ? FROM computer", ([self.nameForSearch])):
-            self.resultOfSearch.setText(str(row))
-            return self.resultOfSearch
+        for row in self.cur.execute("SELECT * FROM computer WHERE name=?", ([self.nameForSearch])):
+
+            #self.resultOfSearch.setPlainText(''.join(row))
+            #return self.resultOfSearch
+
+            addRowToList = []
+            addRowToList.append(row)
+            
+            result = ' '.join([str(item) for item in addRowToList])
+
+        self.resultOfSearch.setText(result)
+
         self.con.commit()
 
     def clickedOnPlusIcon(self):
