@@ -8,19 +8,8 @@ import sqlite3
 # Now we are going to get stuff from PyQT6
 # Have to tell it what we want because they offer a lot of stuff
 from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QWidget, QToolBar, QStatusBar, QLineEdit, QGridLayout, QVBoxLayout, QTextEdit
+from PyQt6.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QWidget, QToolBar, QStatusBar, QLineEdit, QGridLayout, QVBoxLayout
 from PyQt6.QtGui import QPalette, QColor, QAction, QIcon, QPixmap
-
-# Creating the color class to customize our interface layout
-class Color(QWidget):
-
-    def __init__(self, color):
-        super(Color, self).__init__()
-        self.setAutoFillBackground(True)
-
-        palette = self.palette()
-        palette.setColor(QPalette.ColorRole.Window, QColor(color))
-        self.setPalette(palette)
 
 # Creating a subclass to customize our application's main window
 # This will also create our window that a user interfaces with
@@ -32,12 +21,34 @@ class MainWindow(QMainWindow):
         # Giving my app a title window. 
         self.setWindowTitle("ITIT")
 
-        label = QLabel("Hello!")
-        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        # Creating the CCS for our MainWindow
+        self.setStyleSheet("""
 
-        self.setCentralWidget(label)
+            QWidget {
+                        background-color: #008884;
+                        color: #ffffff;
+                    }
 
-        toolbar = QToolBar("My main toolbar")
+                           """)
+
+        openingLayout = QGridLayout()
+     
+        titleImage = QPixmap('title.png')
+        titleImageLabel = QLabel()
+        titleImageLabel.setPixmap(titleImage)
+        titleImageLabel.setScaledContents(True)
+        # Add it to the layout. 
+        openingLayout.addWidget(titleImageLabel, 1, 1)       
+
+        # Create a blank widget
+        widget = QWidget()
+        # Place our layout in the blank widget so that all the widgets found within are shown
+        widget.setLayout(openingLayout)
+        # Make the widget the central widget so it is show on the screen
+        self.setCentralWidget(widget)
+
+        # Create my toolbar
+        toolbar = QToolBar("ITIT Toolbar")
         toolbar.setIconSize(QSize(16,16))
         self.addToolBar(toolbar)
 
