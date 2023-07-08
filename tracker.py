@@ -7,9 +7,9 @@ import sqlite3
 
 # Now we are going to get stuff from PyQT6
 # Have to tell it what we want because they offer a lot of stuff
-from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtCore import QSize
 from PyQt6.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QWidget, QToolBar, QStatusBar, QLineEdit, QGridLayout, QVBoxLayout
-from PyQt6.QtGui import QPalette, QColor, QAction, QIcon, QPixmap
+from PyQt6.QtGui import QAction, QIcon, QPixmap
 
 # Creating a subclass to customize our application's main window
 # This will also create our window that a user interfaces with
@@ -18,6 +18,9 @@ class MainWindow(QMainWindow):
         # Since I subclassed a Qtclass, I have to call the super__init__ function to setup my object
         super().__init__()
 
+        # Setting the window size
+        self.resize(500, 300)
+
         # Giving my app a title window. 
         self.setWindowTitle("ITIT")
 
@@ -25,20 +28,37 @@ class MainWindow(QMainWindow):
         self.setStyleSheet("""
 
             QWidget {
-                        background-color: #008884;
-                        color: #ffffff;
+                        background-color: #ffffff;
+                    }
+                           
+            QPushButton {
+                           background-color: #E7A722;
+                           font-family: "Lucida Sans", Helvetica, sans-serif;
+                           font-size: 16px;                           
+                        }
+                           
+            QLineEdit   {
+                           background-color: #ffffff;
+                           color: #008884;
+                           font-family: "Lucida Sans", Helvetica, sans-serif;
+                           font-size: 16px;
+                        }
+                           
+            QLabel  {
+                        color: #000000;
+                        font-family: "Lucida Sans", Helvetica, sans-serif;
+                        font-size: 18px;         
                     }
 
                            """)
 
-        openingLayout = QGridLayout()
+        openingLayout = QVBoxLayout()
      
-        titleImage = QPixmap('title.png')
-        titleImageLabel = QLabel()
-        titleImageLabel.setPixmap(titleImage)
-        titleImageLabel.setScaledContents(True)
-        # Add it to the layout. 
-        openingLayout.addWidget(titleImageLabel, 1, 1)       
+        welcome = QLabel("Welcome to ITIT.") 
+        openingLayout.addWidget(welcome)    
+
+        fullName= QLabel("Information Technology Inventory Tracker")
+        openingLayout.addWidget(fullName)
 
         # Create a blank widget
         widget = QWidget()
@@ -103,18 +123,40 @@ class MainWindow(QMainWindow):
         #self.createTables()
 
     def clickedOnHomeIcon(self):
-        # Inserting an image of what I want my text to look like. 
-        textImage = QPixmap('homeScreenText.jpg')
-        textImageLabel = QLabel()
-        textImageLabel.setPixmap(textImage)
-        textImageLabel.setScaledContents(True)
 
-        self.setCentralWidget(textImageLabel)
+        # Create homescreen Layout
+        homeLayout = QVBoxLayout()
+
+        welcome = QLabel("Welcome to ITIT.") 
+        homeLayout.addWidget(welcome)    
+
+        fullName= QLabel("Information Technology Inventory Tracker")
+        homeLayout.addWidget(fullName)
+
+        # Create a blank widget
+        widget = QWidget()
+        # Place our layout in the blank widget so that all the widgets found within are shown
+        widget.setLayout(homeLayout)
+        # Make the widget the central widget so it is show on the screen
+        self.setCentralWidget(widget)
+
 
     def clickedOnSearchIcon(self):
 
         # Begin my layout for the Search page
         searchLayout = QVBoxLayout()
+
+        searchTitle = QLabel("Search Page")
+        searchLayout.addWidget(searchTitle)
+
+        searchInstructions = QLabel("Enter in the computer name that you would like to search for.")
+        searchLayout.addWidget(searchInstructions)
+
+        searchInstructions2 = QLabel("Press enter to prep your name for the search.")
+        searchLayout.addWidget(searchInstructions2)
+
+        searchInstructions3 = QLabel("Otherwise, your search won't work.")
+        searchLayout.addWidget(searchInstructions3)
 
         # Get input from the user for the computer that they need to search for  
         self.getNameToSearchFor = QLineEdit()
@@ -134,7 +176,10 @@ class MainWindow(QMainWindow):
         # What happens when button is pressed
         self.forSearchBtn.clicked.connect(self.fsbClicked)
         # Add it to the layout
-        searchLayout.addWidget(self.forSearchBtn)        
+        searchLayout.addWidget(self.forSearchBtn)  
+
+        searchResults = QLabel("Results: ")
+        searchLayout.addWidget(searchResults)      
 
         # Add an "empty" box of text to display the results
         self.resultOfSearch = QLabel()
@@ -183,15 +228,30 @@ class MainWindow(QMainWindow):
         
         # Getting input from the user about the items that need added to the inventory
         # Got a bit crazy
+
+        plusTitle = QLabel("Add Items Page")
+        plusLayout.addWidget(plusTitle, 0, 0)
+
+        plusInstructions = QLabel("Enter in the following information for the new item.")
+        plusLayout.addWidget(plusInstructions, 1, 0)
+
+        plusInstructions2 = QLabel("Press enter to prep your information for the item.")
+        plusLayout.addWidget(plusInstructions2, 2, 0)
+
+        plusInstructions3 = QLabel("Otherwise, your search won't work.")
+        plusLayout.addWidget(plusInstructions3,3, 0)
+
+        plusNumber = QLabel("Enter in a number for the item's primary key.")
+        plusLayout.addWidget(plusNumber, 4, 0)
         
         # Getting primary key information
         self.getPrimaryKey = QLineEdit()
         # Setting a mak length for the primary key
         self.getPrimaryKey.setMaxLength(5)
         # Tells user what to put in box. 
-        self.getPrimaryKey.setPlaceholderText("Enter item number: ")
+        self.getPrimaryKey.setPlaceholderText("Item Number")
         # Add it to the grid to show up on screen
-        plusLayout.addWidget(self.getPrimaryKey, 0, 0)
+        plusLayout.addWidget(self.getPrimaryKey, 5, 0)
         # What to do once enter has been submitted
         self.getPrimaryKey.returnPressed.connect(self.pkReturnPressed)
 
@@ -199,84 +259,102 @@ class MainWindow(QMainWindow):
         # For primary key
         self.pkReady = QLineEdit(text="Not Ready")
         # Add it to the layout
-        plusLayout.addWidget(self.pkReady, 0, 1)
+        plusLayout.addWidget(self.pkReady, 5, 1)
+
+        plusMake = QLabel("Enter in the make of the item.")
+        plusLayout.addWidget(plusMake, 6, 0)
 
         # Follows same logic as the primary key information
         self.getMake = QLineEdit()
         self.getMake.setMaxLength(20)
-        self.getMake.setPlaceholderText("Enter item make: ")
-        plusLayout.addWidget(self.getMake, 1, 0)
+        self.getMake.setPlaceholderText("Item Make")
+        plusLayout.addWidget(self.getMake, 7, 0)
         self.getMake.returnPressed.connect(self.maReturnPressed)
 
         # Follows same logic as pkReady line
         # For make 
         self.maReady = QLineEdit(text="Not Ready")
-        plusLayout.addWidget(self.maReady, 1, 1)
+        plusLayout.addWidget(self.maReady, 7, 1)
+
+        plusModel = QLabel("Enter in the model of the item.")
+        plusLayout.addWidget(plusModel, 8, 0)
 
         # Follows same logic as the primary key information
         self.getModel = QLineEdit()
         self.getModel.setMaxLength(20)
-        self.getModel.setPlaceholderText("Enter item model: ")
-        plusLayout.addWidget(self.getModel, 2, 0)
+        self.getModel.setPlaceholderText("Item Model")
+        plusLayout.addWidget(self.getModel, 9, 0)
         self.getModel.returnPressed.connect(self.moReturnPressed)
 
         # Follows same logic as pkReady line
         # For model
         self.moReady = QLineEdit(text="Not Ready")
-        plusLayout.addWidget(self.moReady, 2, 1)        
+        plusLayout.addWidget(self.moReady, 9, 1)
+
+        plusItemType = QLabel("Enter in the type of the item.")
+        plusLayout.addWidget(plusItemType, 10, 0)
 
         # Follows same logic as the primary key information
         self.getItemType = QLineEdit()
         self.getItemType.setMaxLength(50)
-        self.getItemType.setPlaceholderText("Enter item type: ")
-        plusLayout.addWidget(self.getItemType, 3, 0)
+        self.getItemType.setPlaceholderText("Item Type")
+        plusLayout.addWidget(self.getItemType, 11, 0)
         self.getItemType.returnPressed.connect(self.itReturnPressed)
 
         # Follows same logic as pkReady line
         # For item type
         self.itReady = QLineEdit(text="Not Ready")
-        plusLayout.addWidget(self.itReady, 3, 1)
+        plusLayout.addWidget(self.itReady, 11, 1)
+
+        plusPurchaseDate = QLabel("Enter in the purchase date of the item.")
+        plusLayout.addWidget(plusPurchaseDate, 12, 0)
 
         # Follows same logic as the primary key information
         self.getPurchasedDate = QLineEdit()
         self.getPurchasedDate.setMaxLength(10)
-        self.getPurchasedDate.setPlaceholderText("Enter item purchased date: ")
-        plusLayout.addWidget(self.getPurchasedDate, 4, 0)
+        self.getPurchasedDate.setPlaceholderText("Purchase Date")
+        plusLayout.addWidget(self.getPurchasedDate, 13, 0)
         self.getPurchasedDate.returnPressed.connect(self.pdReturnPressed)
 
         # Follows same logic as pkReady line
         # For purchased date
         self.pdReady = QLineEdit(text="Not Ready")
-        plusLayout.addWidget(self.pdReady, 4, 1)
+        plusLayout.addWidget(self.pdReady, 13, 1)
+
+        plusName = QLabel("Enter in the name of the item.")
+        plusLayout.addWidget(plusName, 14, 0)       
 
         # Follows same logic as the primary key information
         self.getName = QLineEdit()
         self.getName.setMaxLength(5) 
-        self.getName.setPlaceholderText("Enter item name: ")
-        plusLayout.addWidget(self.getName, 5, 0)
+        self.getName.setPlaceholderText("Item Name")
+        plusLayout.addWidget(self.getName, 15, 0)
         self.getName.returnPressed.connect(self.naReturnPressed)
 
         # Follows same logic as pkReady line
         # For name
         self.naReady = QLineEdit(text="Not Ready")
-        plusLayout.addWidget(self.naReady, 5, 1)
+        plusLayout.addWidget(self.naReady, 15, 1)
+
+        plusAssignedBranch = QLabel("Enter in the assigned branch of the item.")
+        plusLayout.addWidget(plusAssignedBranch, 16, 0)  
 
         # Follows same logic as the primary key information
         self.getAssignedBranch = QLineEdit()
         self.getAssignedBranch.setMaxLength(20)
-        self.getAssignedBranch.setPlaceholderText("Enter item branch: ")
-        plusLayout.addWidget(self.getAssignedBranch, 6, 0)
+        self.getAssignedBranch.setPlaceholderText("Item Assigned Branch")
+        plusLayout.addWidget(self.getAssignedBranch, 17, 0)
         self.getAssignedBranch.returnPressed.connect(self.abReturnPressed)
 
         # Follows same logic as pkReady line
         # For assigned branch 
         self.abReady = QLineEdit(text="Not Ready")
-        plusLayout.addWidget(self.abReady, 6, 1)
+        plusLayout.addWidget(self.abReady, 17, 1)
 
         # Created a submit button
         self.addSubmitBtn = QPushButton(text="Submit")
         # Add it to the grid
-        plusLayout.addWidget(self.addSubmitBtn, 3, 2)
+        plusLayout.addWidget(self.addSubmitBtn, 18,0)
         # Tells what happens when the button is clicked on
         self.addSubmitBtn.clicked.connect(self.sBtnClicked)
 
@@ -333,6 +411,24 @@ class MainWindow(QMainWindow):
         
         # Creating submit page layout
         updateLayout = QGridLayout()
+
+        updateTitle = QLabel("Update Item Page")
+        updateLayout.addWidget(updateTitle, 0, 0)
+
+        updateInstructions = QLabel("Enter in the fields that need to be updated.")
+        updateLayout.addWidget(updateInstructions, 1, 0)
+
+        updateInstructions2 = QLabel("Press enter to prep your updates for changes.")
+        updateLayout.addWidget(updateInstructions2, 2, 0)
+
+        updateInstructions3 = QLabel("ALWAYS put in the item number to update.")
+        updateLayout.addWidget(updateInstructions3, 3, 0)
+
+        updateInstructions4 = QLabel("Otherwise, your update won't work properly.")
+        updateLayout.addWidget(updateInstructions4, 4, 0)
+
+        pkField = QLabel("Item Number")
+        updateLayout.addWidget(pkField, 5, 0)
         
         # Getting input from the user about the item that needs updated in the inventory
         # There is a lot to write. 
@@ -343,7 +439,7 @@ class MainWindow(QMainWindow):
         # Tells user what to put in box. 
         self.getPrimaryKey.setPlaceholderText("Enter item number: ")
         # Add it to the grid to show up on screen
-        updateLayout.addWidget(self.getPrimaryKey, 0, 0)
+        updateLayout.addWidget(self.getPrimaryKey, 6, 0)
         # What to do once enter has been submitted
         self.getPrimaryKey.returnPressed.connect(self.pkReturnPressed)
 
@@ -351,84 +447,102 @@ class MainWindow(QMainWindow):
         # For primary key
         self.pkReady = QLineEdit(text="Not Ready")
         # Add it to the layout
-        updateLayout.addWidget(self.pkReady, 0, 1)
+        updateLayout.addWidget(self.pkReady, 6, 1)
+
+        makeField = QLabel("Make")
+        updateLayout.addWidget(makeField, 7, 0)        
 
         # Follows same logic as the primary key information
         self.getMake = QLineEdit()
         self.getMake.setMaxLength(20)
         self.getMake.setPlaceholderText("Enter item make: ")
-        updateLayout.addWidget(self.getMake, 1, 0)
+        updateLayout.addWidget(self.getMake, 8, 0)
         self.getMake.returnPressed.connect(self.maReturnPressed)
 
         # Follows same logic as pkReady line
         # For make 
         self.maReady = QLineEdit(text="Not Ready")
-        updateLayout.addWidget(self.maReady, 1, 1)
+        updateLayout.addWidget(self.maReady, 8, 1)
+
+        modelField = QLabel("Model")
+        updateLayout.addWidget(modelField, 9, 0)  
 
         # Follows same logic as the primary key information
         self.getModel = QLineEdit()
         self.getModel.setMaxLength(20)
         self.getModel.setPlaceholderText("Enter item model: ")
-        updateLayout.addWidget(self.getModel, 2, 0)
+        updateLayout.addWidget(self.getModel, 10, 0)
         self.getModel.returnPressed.connect(self.moReturnPressed)
 
         # Follows same logic as pkReady line
         # For model
         self.moReady = QLineEdit(text="Not Ready")
-        updateLayout.addWidget(self.moReady, 2, 1)        
+        updateLayout.addWidget(self.moReady, 10, 1)
+
+        itField = QLabel("Item Type")
+        updateLayout.addWidget(itField, 11, 0)                 
 
         # Follows same logic as the primary key information
         self.getItemType = QLineEdit()
         self.getItemType.setMaxLength(50)
         self.getItemType.setPlaceholderText("Enter item type: ")
-        updateLayout.addWidget(self.getItemType, 3, 0)
+        updateLayout.addWidget(self.getItemType, 12, 0)
         self.getItemType.returnPressed.connect(self.itReturnPressed)
 
         # Follows same logic as pkReady line
         # For item type
         self.itReady = QLineEdit(text="Not Ready")
-        updateLayout.addWidget(self.itReady, 3, 1)
+        updateLayout.addWidget(self.itReady, 12, 1)
+
+        pdField = QLabel("Purchase Date")
+        updateLayout.addWidget(pdField, 11, 0)          
 
         # Follows same logic as the primary key information
         self.getPurchasedDate = QLineEdit()
         self.getPurchasedDate.setMaxLength(10)
         self.getPurchasedDate.setPlaceholderText("Enter item purchased date: ")
-        updateLayout.addWidget(self.getPurchasedDate, 4, 0)
+        updateLayout.addWidget(self.getPurchasedDate, 12, 0)
         self.getPurchasedDate.returnPressed.connect(self.pdReturnPressed)
 
         # Follows same logic as pkReady line
         # For purchased date
         self.pdReady = QLineEdit(text="Not Ready")
-        updateLayout.addWidget(self.pdReady, 4, 1)
+        updateLayout.addWidget(self.pdReady, 12, 1)
+
+        nameField = QLabel("Name")
+        updateLayout.addWidget(nameField, 13, 0)        
 
         # Follows same logic as the primary key information
         self.getName = QLineEdit()
         self.getName.setMaxLength(5) 
         self.getName.setPlaceholderText("Enter item name: ")
-        updateLayout.addWidget(self.getName, 5, 0)
+        updateLayout.addWidget(self.getName, 14, 0)
         self.getName.returnPressed.connect(self.naReturnPressed)
 
         # Follows same logic as pkReady line
         # For name
         self.naReady = QLineEdit(text="Not Ready")
-        updateLayout.addWidget(self.naReady, 5, 1)
+        updateLayout.addWidget(self.naReady, 14, 1)
+
+        abField = QLabel("Assigned Branch")
+        updateLayout.addWidget(abField, 15, 0)  
 
         # Follows same logic as the primary key information
         self.getAssignedBranch = QLineEdit()
         self.getAssignedBranch.setMaxLength(20)
         self.getAssignedBranch.setPlaceholderText("Enter item branch: ")
-        updateLayout.addWidget(self.getAssignedBranch, 6, 0)
+        updateLayout.addWidget(self.getAssignedBranch, 16, 0)
         self.getAssignedBranch.returnPressed.connect(self.abReturnPressed)
 
         # Follows same logic as pkReady line
         # For assigned branch 
         self.abReady = QLineEdit(text="Not Ready")
-        updateLayout.addWidget(self.abReady, 6, 1)
+        updateLayout.addWidget(self.abReady, 16, 1)
 
         # Created a submit button
         self.updateSubmitBtn = QPushButton(text="Submit")
         # Add it to the grid
-        updateLayout.addWidget(self.updateSubmitBtn, 3, 2)
+        updateLayout.addWidget(self.updateSubmitBtn, 17, 0)
         # Tells what happens when the button is clicked on
         self.updateSubmitBtn.clicked.connect(self.updateBtnClicked)
 
@@ -454,6 +568,18 @@ class MainWindow(QMainWindow):
         
         # Creating the delete page layout
         deleteLayout = QVBoxLayout()
+
+        deleteTitle = QLabel("Delete Items Page")
+        deleteLayout.addWidget(deleteTitle)
+
+        deleteInstructions = QLabel("Enter in the computer name that you would like to delete.")
+        deleteLayout.addWidget(deleteInstructions)
+
+        deleteInstructions2 = QLabel("Press enter to prep your name for deletion.")
+        deleteLayout.addWidget(deleteInstructions2)
+
+        deleteInstructions3 = QLabel("Otherwise, your search won't work.")
+        deleteLayout.addWidget(deleteInstructions3)        
 
         # Creating a variable to get the name of the item that needs deleted
         self.nameToDelete = QLineEdit()
@@ -521,3 +647,5 @@ window.show()
 
 # Start the event loop
 app.exec()
+
+# Finished. 
