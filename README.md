@@ -6,9 +6,9 @@ An inventory tracker for a local credit union. Called Information Technology Inv
 * idahosrw@gmail.com
 
 ## Future Work
-* Edit interface to use SQLite3 program
-* Figure out how to use brand colors in the interface
-* Figure out how to generate reports for the database
+* Update home page to include more information
+* Fix window expanding problem
+* Add in login for user
 
 ## Resources
 These are websites that I found helpful throughout this process. 
