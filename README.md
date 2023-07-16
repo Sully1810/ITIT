@@ -5,6 +5,10 @@ An inventory tracker for a local credit union. Called Information Technology Inv
 **Samantha Webb**
 * idahosrw@gmail.com
 
+## Video Demo
+I filmed a video of me going over my integrated interface and SQL database. 
+[ITIT Demo](https://youtu.be/2yVLl6uFCSE)
+
 ## Future Work
 * Update home page to include more information
 * Fix window expanding problem
